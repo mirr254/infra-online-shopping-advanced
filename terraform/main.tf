@@ -63,3 +63,12 @@ resource "aws_route_table_associatiation" {
   route_table_id = "${aws_route_table.public_route_table.id}"
   subnet_id      = "${aws_subnet.public_subnet_3.id}"
 }
+
+resource "aws_eip" "elastic-ip-for-nat-gtw" {
+  vpc                       = true
+  associate_with_private_ip = "10.0.0.5"
+
+  tags {
+    Name = "Production-EIP"
+  }
+}
