@@ -89,3 +89,17 @@ resource "aws_route" "nat-gtw-route" {
   nat_gateway_id         = "${aws_nat_gateway.nat-gtw.id}"
   destination_cidr_block = "0.0.0.0/0"
 }
+
+resource "aws_internet_gateway" "production-internet-gtw" {
+  vpc_id       = "${aws_vpc.production-vpc.id}"
+
+  tags {
+    Name = "Proction-VPC"
+  }
+}
+
+resource "aws_route" "public-internet-gtw-route" {
+  route_table_id   = "${aws_route_table.public-route-table}"
+  gateway_id       = "${aws_internet_gateway.production-internet-gtw.id}"
+  destination_cidr_block = "0.0.0.0/0"
+}
