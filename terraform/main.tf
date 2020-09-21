@@ -72,3 +72,20 @@ resource "aws_eip" "elastic-ip-for-nat-gtw" {
     Name = "Production-EIP"
   }
 }
+
+resource "aws_nat_gateway" "nat-gtw" {
+  allocation_id = "${aws_eip.elastic-ip-for-nat-gtw.id}"
+  subnet_id     = "${aws_subnet.public_subnet_1.id}"
+
+  tags {
+    Name = "Production-NAT-GTW"
+  }
+
+  depends_on = "${aws_eip.elastic-ip-for-nat-gtw.ip}"
+}
+
+resource "aws_route" "nat-gtw-route" {
+  route_table_id         = "${aws_route_table.private-route-table.id}"
+  nat_gateway_id         = "${aws_nat_gateway.nat-gtw.id}"
+  destination_cidr_block = "0.0.0.0/0"
+}
